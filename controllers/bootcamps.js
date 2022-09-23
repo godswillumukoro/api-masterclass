@@ -22,12 +22,12 @@ exports.getBootcamp = async (req, res, next) => {
     try {
         const bootcamp = await Bootcamp.findById(req.params.id)
         if (!bootcamp) {
-            return res.status(400).json({ success: false }) //making sure the bootcamp exists
+            return res.status(400).json({ success: false }) // making sure the bootcamp actually exists
         }
         res.status(200).json({ success: true, data: bootcamp })
     } catch (error) {
-        res.status(400).json({ success: false, data: error })
-
+        // res.status(400).json({ success: false, data: error })
+        next(error)
     }
 
 }

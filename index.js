@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const morgan = require('morgan')
 const colors = require('colors')
+const errorHandler = require('./middleware/error') // importing custom error handler middleware
 
 dotenv.config({ path: './config/config.env' })
 const bootcamps = require('./routes/bootcamps')
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json())
 app.use('/api/v1/bootcamps', bootcamps)
+app.use(errorHandler) // using custom error handler middleware
 
 const PORT = process.env.PORT
 const server = app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port:${PORT}`.yellow.bold))
