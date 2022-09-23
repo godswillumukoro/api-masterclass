@@ -10,7 +10,7 @@ exports.getBootcamps = async (req, res, next) => {
 
         res.status(200).json({ success: true, total: bootcamps.length, data: bootcamps })
     } catch (error) {
-        res.status(400).json({ success: false, data: error })
+        next( error )
 
     }
 }
@@ -24,11 +24,11 @@ exports.getBootcamp = async (req, res, next) => {
         if (!bootcamp) {
             return next(
                 new ErrorResponse(`Bootcamp with ID:${req.params.id} was not found`, 404)
-            ) // making sure the bootcamp actually exists
+            ) // If it does not exist in the database
         }
         res.status(200).json({ success: true, data: bootcamp })
     } catch (error) {
-        next(new ErrorResponse(`Bootcamp with ID:${req.params.id} was not found`, 404))
+        next( error )
     }
 
 }
@@ -45,7 +45,7 @@ exports.createBootcamp = async (req, res, next) => {
         })
 
     } catch (error) {
-        res.status(400).json({ success: false }) //If duplicate name was supplied
+        next( error ) //If duplicate name was supplied
     }
 }
 
@@ -60,12 +60,14 @@ exports.updateBootcamp = async (req, res, next) => {
         })
 
         if (!bootcamp) {
-            return res.status(400).json({ success: false }) //making sure the bootcamp exists
+            return next(
+                new ErrorResponse(`Bootcamp with ID:${req.params.id} was not found`, 404)
+            ) // If it does not exist in the database
         }
 
         res.status(200).json({ success: true, data: bootcamp })
     } catch (error) {
-        return res.status(400).json({ success: false })
+        next( error )
 
     }
 
@@ -80,13 +82,14 @@ exports.deleteBootcamp = async (req, res, next) => {
         const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id)
 
         if (!bootcamp) {
-            return res.status(400).json({ success: false }) //making sure the bootcamp exists
-
+            return next(
+                new ErrorResponse(`Bootcamp with ID:${req.params.id} was not found`, 404)
+            ) // If it does not exist in the database
         }
 
         res.status(200).json({ success: true, data: `${bootcamp.name} was successfully deleted` })
     } catch (error) {
-        res.status(400).json({ success: false })
+        next( error )
     }
 
 }
