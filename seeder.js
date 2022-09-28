@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const colors = require('colors')
 
 const dotenv = require('dotenv')
-dotenv.config({path: './config/config.env'})
+dotenv.config({ path: './config/config.env' })
 
 const Bootcamp = require('./models/Bootcamp')
 mongoose.connect(process.env.MONGODB_URI)
 
-const bootcamps = JSON.parse(fs.readFileSync(`${__dirname}/_data/bootcamps.json`))
+const bootcamps = JSON.parse(fs.readFileSync(`${__dirname}/_data/bootcamps.json`, 'utf-8'))
 
 // import into DB
 const importData = async () => {
@@ -33,7 +33,7 @@ const deleteData = async () => {
     }
 }
 
-if(process.argv[2] === '-i') {
+if (process.argv[2] === '-i') {
     importData()
 } else if (process.argv[2] === '-d') {
     deleteData()
