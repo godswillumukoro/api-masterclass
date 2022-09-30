@@ -1,4 +1,3 @@
-const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const Course = require('../models/Course')
 
@@ -9,10 +8,13 @@ const Course = require('../models/Course')
 exports.getCourses = asyncHandler(async (req, res, next) => {
     let query
 
-    if(req.params.bootcampId) {
-        query = Course.find({bootcamp: req.params.bootcampId})
+    if (req.params.bootcampId) {
+        query = Course.find({ bootcamp: req.params.bootcampId })
     } else {
-        query = Course.find()
+        query = Course.find().populate({
+            path: 'bootcamp',
+            select: 'name description'
+        })
     }
 
     const courses = await query
